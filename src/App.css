@@ -1,0 +1,351 @@
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #e2dfdf;
+  background-image: url(/Images/engine.jpg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Container styles */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo styles */
+.logo {
+  max-width: 200px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 30px;
+  background-color: #d9dbdc;
+}
+
+/* Typography */
+h1,
+h2 {
+  color: #2c3e50;
+}
+
+h1 {
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+h2 {
+  margin-top: 30px;
+}
+
+/* Form styles */
+.login-form,
+.position-selection,
+.shift-selection {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: rgb(225, 224, 224);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.weekend-shift {
+  /* Additional styling for weekend shift section if needed */
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-group label[for="employee-email"] {
+  margin-top: 18px;
+  display: block;
+}
+
+/* Button styles */
+button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+button.secondary {
+  background-color: #6c757d;
+}
+
+button.secondary:hover {
+  background-color: #5a6268;
+}
+
+.logout-btn {
+  float: right;
+  background-color: #e74c3c;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}
+
+.export-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.export-btn:hover {
+  background-color: #5a6268;
+}
+
+.modal-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Registration link styles */
+.registration-link {
+  margin-top: 20px;
+  text-align: center;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.registration-link p {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+.registration-link button {
+  background: none;
+  border: none;
+  color: #3498db;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+}
+
+.registration-link button:hover {
+  color: #2980b9;
+  background: none;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Position selection styles */
+.position-options {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.position-btn {
+  width: 48%;
+  padding: 15px;
+  font-size: 16px;
+}
+
+/* Weather widget styles */
+.weather-info {
+  background-color: #e3f2fd;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.weather-details {
+  display: flex;
+  align-items: center;
+}
+
+.weather-icon {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #3498db;
+}
+
+/* Value input styles */
+.value-input-container {
+  position: relative;
+}
+
+.value-input {
+  padding-right: 40px !important;
+}
+
+.unit-label {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+/* Remarks section styles */
+.remarks-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.remarks-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.submit-confirm {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Export buttons */
+.export-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 3px solid #e74c3c;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal-title {
+  color: #e74c3c;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.modal-message {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Utility classes */
+.hidden {
+  display: none;
+}
+
+.timestamp {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.walkdow_title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
