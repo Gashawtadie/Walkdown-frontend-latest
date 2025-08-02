@@ -1,24 +1,41 @@
 import React, { useState } from 'react';
+import authService from '../services/authService';
 
 const LoginScreen = ({ onLogin, onShowRegistration }) => {
   const [employeeEmail, setEmployeeEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    
     // Email validation: must end with @siemens-energy.com
     if (
       !employeeEmail ||
       !/^[A-Za-z0-9._%+-]+@siemens-energy\.com$/.test(employeeEmail)
     ) {
-      alert('Please enter a valid Siemens Energy email (e.g., gashaw.tadie@siemens-energy.com)');
+      setError('Please enter a valid Siemens Energy email (e.g., gashaw.tadie@siemens-energy.com)');
       return;
     }
     if (!password) {
-      alert('Please enter your password');
+      setError('Please enter your password');
       return;
     }
-    onLogin();
+
+    setIsLoading(true);
+    
+    try {
+      const response = await authService.login(employeeEmail, password);
+      console.log('Login successful:', response);
+      onLogin(response.user);
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,6 +76,19 @@ const LoginScreen = ({ onLogin, onShowRegistration }) => {
         Last updated: {new Date().toLocaleString()}
       </div>
 
+      {error && (
+        <div className="error-message" style={{ 
+          color: 'red', 
+          backgroundColor: '#ffebee', 
+          padding: '10px', 
+          borderRadius: '4px', 
+          marginBottom: '15px',
+          textAlign: 'center'
+        }}>
+          {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="employee-email">Employee Email:</label>
@@ -70,6 +100,7 @@ const LoginScreen = ({ onLogin, onShowRegistration }) => {
             onChange={(e) => setEmployeeEmail(e.target.value)}
             required
             pattern="^[A-Za-z0-9._%+-]+@siemens-energy\.com$"
+            disabled={isLoading}
           />
         </div>
         <div className="form-group">
@@ -80,15 +111,18 @@ const LoginScreen = ({ onLogin, onShowRegistration }) => {
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
 
       {/* Registration link */}
       <div className="registration-link">
         <p>Don't have an account?</p>
-        <button type="button" onClick={onShowRegistration}>
+        <button type="button" onClick={onShowRegistration} disabled={isLoading}>
           Create a new account
         </button>
       </div>

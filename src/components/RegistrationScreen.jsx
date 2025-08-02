@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import authService from '../services/authService';
 
 const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
     password: ''
   });
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,21 +21,56 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     // Email validation: must end with @siemens-energy.com
     if (
-      !employeeEmail ||
-      !/^[A-Za-z0-9._%+-]+@siemens-energy\.com$/.test(employeeEmail)
+      !formData.email ||
+      !/^[A-Za-z0-9._%+-]+@siemens-energy\.com$/.test(formData.email)
     ) {
-      alert('Please enter a valid Siemens Energy email (e.g., gashaw.tadie@siemens-energy.com)');
+      setError('Please enter a valid Siemens Energy email (e.g., gashaw.tadie@siemens-energy.com)');
       return;
     }
-    if (!password) {
-      alert('Please enter your password');
+
+    // Password validation
+    if (!formData.password) {
+      setError('Please enter your password');
       return;
     }
-    onRegister();
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
+    // Confirm password validation
+    if (formData.password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    // Required fields validation
+    if (!formData.username || !formData.firstName || !formData.lastName) {
+      setError('Please fill in all required fields');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await authService.register(formData);
+      console.log('Registration successful:', response);
+      setError('');
+      alert('Registration successful! Please login with your new account.');
+      onRegister();
+    } catch (error) {
+      console.error('Registration error:', error);
+      setError(error.message || 'Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -50,6 +88,19 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
       <div className="timestamp" id="registration-time">
         Last updated: {new Date().toLocaleString()}
       </div>
+
+      {error && (
+        <div className="error-message" style={{ 
+          color: 'red', 
+          backgroundColor: '#ffebee', 
+          padding: '10px', 
+          borderRadius: '4px', 
+          marginBottom: '15px',
+          textAlign: 'center'
+        }}>
+          {error}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -62,6 +113,7 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             value={formData.username}
             onChange={handleInputChange}
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -75,6 +127,7 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             value={formData.firstName}
             onChange={handleInputChange}
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -88,6 +141,7 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             value={formData.lastName}
             onChange={handleInputChange}
             required
+            disabled={isLoading}
           />
         </div>
 
@@ -97,10 +151,12 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             type="email"
             id="email"
             name="email"
-            placeholder="Enter email address"
+            placeholder="Enter Siemens Energy email"
             value={formData.email}
             onChange={handleInputChange}
             required
+            pattern="^[A-Za-z0-9._%+-]+@siemens-energy\.com$"
+            disabled={isLoading}
           />
         </div>
 
@@ -114,6 +170,8 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             value={formData.password}
             onChange={handleInputChange}
             required
+            minLength="6"
+            disabled={isLoading}
           />
         </div>
 
@@ -127,11 +185,14 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
+            disabled={isLoading}
           />
         </div>
 
-        <button type="submit">Register</button>
-        <button type="button" className="secondary" onClick={onBackToLogin} style={{ marginTop: '10px' }}>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Creating Account...' : 'Register'}
+        </button>
+        <button type="button" className="secondary" onClick={onBackToLogin} style={{ marginTop: '10px' }} disabled={isLoading}>
           Back to Login
         </button>
       </form>
