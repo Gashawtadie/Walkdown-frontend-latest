@@ -1,10 +1,6 @@
 // Authentication service for backend API calls
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
-// Debug: Log the API base URL to verify environment variable is working
-console.log('API Base URL:', API_BASE_URL);
-console.log('Environment variable value:', import.meta.env.VITE_API_BASE_URL);
-
 class AuthService {
   async login(email, password) {
     try {
