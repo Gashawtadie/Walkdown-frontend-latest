@@ -13,8 +13,32 @@ class AuthService {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+        // Try to parse JSON error response
+        let errorMessage = 'Login failed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorData.error || 'Login failed';
+        } catch (parseError) {
+          // If response is not JSON (e.g., HTML error page), use status-based message
+          if (response.status === 401) {
+            errorMessage = 'Invalid email or password';
+          } else if (response.status === 404) {
+            errorMessage = 'Login endpoint not found. Please check if your backend has the correct API route.';
+          } else if (response.status === 403) {
+            errorMessage = 'Access denied. Please check your credentials.';
+          } else if (response.status === 422) {
+            errorMessage = 'Invalid request data. Please check your email format.';
+          } else if (response.status === 500) {
+            errorMessage = 'Server error. Please try again later.';
+          } else if (response.status >= 400 && response.status < 500) {
+            errorMessage = 'Invalid request. Please check your credentials.';
+          } else if (response.status >= 500) {
+            errorMessage = 'Server error. Please try again later.';
+          } else {
+            errorMessage = `Login failed (Status: ${response.status})`;
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -27,6 +51,10 @@ class AuthService {
 
       return data;
     } catch (error) {
+      // Handle network errors
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Network error. Please check your internet connection and backend URL.');
+      }
       throw error;
     }
   }
@@ -42,13 +70,43 @@ class AuthService {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Registration failed');
+        // Try to parse JSON error response
+        let errorMessage = 'Registration failed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorData.error || 'Registration failed';
+        } catch (parseError) {
+          // If response is not JSON (e.g., HTML error page), use status-based message
+          if (response.status === 409) {
+            errorMessage = 'User already exists with this email';
+          } else if (response.status === 400) {
+            errorMessage = 'Invalid registration data. Please check your information.';
+          } else if (response.status === 404) {
+            errorMessage = 'Registration endpoint not found. Please check if your backend has the correct API route.';
+          } else if (response.status === 403) {
+            errorMessage = 'Access denied. Please check your registration data.';
+          } else if (response.status === 422) {
+            errorMessage = 'Invalid request data. Please check your information.';
+          } else if (response.status === 500) {
+            errorMessage = 'Server error. Please try again later.';
+          } else if (response.status >= 400 && response.status < 500) {
+            errorMessage = 'Invalid request. Please check your registration data.';
+          } else if (response.status >= 500) {
+            errorMessage = 'Server error. Please try again later.';
+          } else {
+            errorMessage = `Registration failed (Status: ${response.status})`;
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
+      // Handle network errors
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Network error. Please check your internet connection and backend URL.');
+      }
       throw error;
     }
   }
