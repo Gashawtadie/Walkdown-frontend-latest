@@ -36,6 +36,14 @@ class AuthService {
   }
 
   async register(userData) {
+    // Email validation: must end with @siemens-energy.com
+    if (
+      !userData.email ||
+      !/^[A-Za-z0-9._%+-]+@siemens-energy.com$/.test(userData.email)
+    ) {
+      throw new Error('Please enter a valid Siemens Energy email (e.g., user@siemens-energy.com)');
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/users/register`, {
         method: 'POST',
@@ -76,4 +84,4 @@ class AuthService {
   }
 }
 
-export default new AuthService(); 
+export default new AuthService();
