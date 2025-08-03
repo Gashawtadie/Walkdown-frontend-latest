@@ -1,6 +1,9 @@
 // Authentication service for backend API calls
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
-const API_BASE_URL =import.meta.env.VITE_API_BASE_URL;
+// Debug: Log the API base URL to verify environment variable is working
+console.log('API Base URL:', API_BASE_URL);
+console.log('Environment variable value:', import.meta.env.VITE_API_BASE_URL);
 
 class AuthService {
   async login(email, password) {
@@ -14,30 +17,8 @@ class AuthService {
       });
 
       if (!response.ok) {
-        let errorMessage = 'Login failed';
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorData.error || 'Login failed';
-        } catch (parseError) {
-          if (response.status === 401) {
-            errorMessage = 'Invalid email or password';
-          } else if (response.status === 404) {
-            errorMessage = 'Login endpoint not found. Please check if your backend has the correct API route.';
-          } else if (response.status === 403) {
-            errorMessage = 'Access denied. Please check your credentials.';
-          } else if (response.status === 422) {
-            errorMessage = 'Invalid request data. Please check your email format.';
-          } else if (response.status === 500) {
-            errorMessage = 'Server error. Please try again later.';
-          } else if (response.status >= 400 && response.status < 500) {
-            errorMessage = 'Invalid request. Please check your credentials.';
-          } else if (response.status >= 500) {
-            errorMessage = 'Server error. Please try again later.';
-          } else {
-            errorMessage = `Login failed (Status: ${response.status})`;
-          }
-        }
-        throw new Error(errorMessage);
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
 
       const data = await response.json();
@@ -50,67 +31,28 @@ class AuthService {
 
       return data;
     } catch (error) {
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        throw new Error('Network error. Please check your internet connection and backend URL.');
-      }
       throw error;
     }
   }
 
   async register(userData) {
-    // Ensure all required fields are present
-    const payload = {
-      username: userData.username,
-      firstname: userData.firstname,
-      lastname: userData.lastname,
-      email: userData.email,
-      password: userData.password,
-    };
-
     try {
       const response = await fetch(`${API_BASE_URL}/users/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(userData),
       });
 
       if (!response.ok) {
-        let errorMessage = 'Registration failed';
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorData.error || 'Registration failed';
-        } catch (parseError) {
-          if (response.status === 409) {
-            errorMessage = 'User already exists with this email';
-          } else if (response.status === 400) {
-            errorMessage = 'Invalid registration data. Please check your information.';
-          } else if (response.status === 404) {
-            errorMessage = 'Registration endpoint not found. Please check if your backend has the correct API route.';
-          } else if (response.status === 403) {
-            errorMessage = 'Access denied. Please check your registration data.';
-          } else if (response.status === 422) {
-            errorMessage = 'Invalid request data. Please check your information.';
-          } else if (response.status === 500) {
-            errorMessage = 'Server error. Please try again later.';
-          } else if (response.status >= 400 && response.status < 500) {
-            errorMessage = 'Invalid request. Please check your registration data.';
-          } else if (response.status >= 500) {
-            errorMessage = 'Server error. Please try again later.';
-          } else {
-            errorMessage = `Registration failed (Status: ${response.status})`;
-          }
-        }
-        throw new Error(errorMessage);
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        throw new Error('Network error. Please check your internet connection and backend URL.');
-      }
       throw error;
     }
   }
@@ -134,4 +76,4 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+export default new AuthService(); 
