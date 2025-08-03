@@ -1,5 +1,6 @@
 // Authentication service for backend API calls
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+
+const API_BASE_URL =import.meta.env.VITE_API_BASE_URL;
 
 class AuthService {
   async login(email, password) {
@@ -13,13 +14,11 @@ class AuthService {
       });
 
       if (!response.ok) {
-        // Try to parse JSON error response
         let errorMessage = 'Login failed';
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorData.error || 'Login failed';
         } catch (parseError) {
-          // If response is not JSON (e.g., HTML error page), use status-based message
           if (response.status === 401) {
             errorMessage = 'Invalid email or password';
           } else if (response.status === 404) {
@@ -51,7 +50,6 @@ class AuthService {
 
       return data;
     } catch (error) {
-      // Handle network errors
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
         throw new Error('Network error. Please check your internet connection and backend URL.');
       }
@@ -60,23 +58,30 @@ class AuthService {
   }
 
   async register(userData) {
+    // Ensure all required fields are present
+    const payload = {
+      username: userData.username,
+      firstname: userData.firstname,
+      lastname: userData.lastname,
+      email: userData.email,
+      password: userData.password,
+    };
+
     try {
       const response = await fetch(`${API_BASE_URL}/users/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        // Try to parse JSON error response
         let errorMessage = 'Registration failed';
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorData.error || 'Registration failed';
         } catch (parseError) {
-          // If response is not JSON (e.g., HTML error page), use status-based message
           if (response.status === 409) {
             errorMessage = 'User already exists with this email';
           } else if (response.status === 400) {
@@ -103,7 +108,6 @@ class AuthService {
       const data = await response.json();
       return data;
     } catch (error) {
-      // Handle network errors
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
         throw new Error('Network error. Please check your internet connection and backend URL.');
       }
@@ -130,4 +134,4 @@ class AuthService {
   }
 }
 
-export default new AuthService(); 
+export default new AuthService();
