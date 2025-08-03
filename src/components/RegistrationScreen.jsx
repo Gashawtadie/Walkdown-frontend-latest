@@ -2,24 +2,14 @@ import React, { useState } from 'react';
 import authService from '../services/authService';
 
 const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
-  const [formData, setFormData] = useState({
-    username: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: ''
-  });
+  const [username, setUsername] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,32 +17,32 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
 
     // Email validation: must end with @siemens-energy.com
     if (
-      !formData.email ||
-      !/^[A-Za-z0-9._%+-]+@siemens-energy\.com$/.test(formData.email)
+      !email ||
+      !/^[A-Za-z0-9._%+-]+@siemens-energy.com$/.test(email)
     ) {
       setError('Please enter a valid Siemens Energy email (e.g., gashaw.tadie@siemens-energy.com)');
       return;
     }
 
     // Password validation
-    if (!formData.password) {
+    if (!password) {
       setError('Please enter your password');
       return;
     }
 
-    if (formData.password.length < 6) {
+    if (password.length < 6) {
       setError('Password must be at least 6 characters long');
       return;
     }
 
     // Confirm password validation
-    if (formData.password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
     // Required fields validation
-    if (!formData.username || !formData.firstName || !formData.lastName) {
+    if (!username || !firstname || !lastname) {
       setError('Please fill in all required fields');
       return;
     }
@@ -60,7 +50,13 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
     setIsLoading(true);
 
     try {
-      const response = await authService.register(formData);
+      const response = await authService.register({
+        username,
+        firstname,
+        lastname,
+        email,
+        password,
+      });
       console.log('Registration successful:', response);
       setError('');
       alert('Registration successful! Please login with your new account.');
@@ -110,8 +106,8 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             id="username"
             name="username"
             placeholder="Enter username"
-            value={formData.username}
-            onChange={handleInputChange}
+            value={username}
+            onChange={e => setUsername(e.target.value)}
             required
             disabled={isLoading}
           />
@@ -124,8 +120,8 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             id="firstName"
             name="firstName"
             placeholder="Enter first name"
-            value={formData.firstName}
-            onChange={handleInputChange}
+            value={firstname}
+            onChange={e => setFirstname(e.target.value)}
             required
             disabled={isLoading}
           />
@@ -138,8 +134,8 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             id="lastName"
             name="lastName"
             placeholder="Enter last name"
-            value={formData.lastName}
-            onChange={handleInputChange}
+            value={lastname}
+            onChange={e => setLastname(e.target.value)}
             required
             disabled={isLoading}
           />
@@ -152,10 +148,10 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             id="email"
             name="email"
             placeholder="Enter Siemens Energy email"
-            value={formData.email}
-            onChange={handleInputChange}
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             required
-            pattern="^[A-Za-z0-9._%+-]+@siemens-energy\.com$"
+            pattern="^[A-Za-z0-9._%+-]+@siemens-energy.com$"
             disabled={isLoading}
           />
         </div>
@@ -167,8 +163,8 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
             id="password"
             name="password"
             placeholder="Enter password (min 6 characters)"
-            value={formData.password}
-            onChange={handleInputChange}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
             required
             minLength="6"
             disabled={isLoading}
