@@ -67,7 +67,8 @@ const ChecklistScreen = ({ position, shiftInfo, onLogout }) => {
     if (!isValid) {
       return;
     }
-    setShowEmailModal(true);
+    // Show remarks section before final submission
+    setShowRemarks(true);
   };
 
   const validateChecklist = () => {
@@ -93,7 +94,7 @@ const ChecklistScreen = ({ position, shiftInfo, onLogout }) => {
     console.log('Checklist submitted with remarks:', remarks);
     alert('Checklist submitted successfully with your remarks!');
     setShowRemarks(false);
-    // Reset or go to login?
+    setShowEmailModal(true); // Show email modal after remarks are submitted
   };
 
   const handleCancelRemarks = () => {
@@ -153,7 +154,8 @@ const ChecklistScreen = ({ position, shiftInfo, onLogout }) => {
         position={position}
         onUpdateItem={updateItemValue}
       />
-      
+
+      {/* Show remarks section before email modal */}
       {showRemarks && (
         <RemarksSection 
           remarks={remarks}
@@ -163,6 +165,7 @@ const ChecklistScreen = ({ position, shiftInfo, onLogout }) => {
         />
       )}
 
+      {/* Only show email modal after remarks are submitted */}
       <EmailSubmissionModal
         show={showEmailModal}
         onClose={() => setShowEmailModal(false)}
