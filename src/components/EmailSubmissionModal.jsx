@@ -58,6 +58,22 @@ const EmailSubmissionModal = ({ show, onClose, checklistData, position, shiftInf
           Please enter your email address to receive the checklist PDF:
         </div>
         
+        {/* Show Final Remarks for confirmation */}
+        {remarks && (
+          <div style={{
+            margin: '20px 0',
+            padding: '10px',
+            background: '#f8f9fa',
+            borderRadius: '4px',
+            border: '1px solid #ddd'
+          }}>
+            <strong>Final Remarks:</strong>
+            <div style={{ marginTop: '8px', whiteSpace: 'pre-wrap', color: '#2c3e50' }}>
+              {remarks}
+            </div>
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
           <div className="form-group">
             <label htmlFor="email">Email Address:</label>
@@ -108,4 +124,4 @@ const EmailSubmissionModal = ({ show, onClose, checklistData, position, shiftInf
   );
 };
 
-export default EmailSubmissionModal; 
+export default EmailSubmissionModal;
