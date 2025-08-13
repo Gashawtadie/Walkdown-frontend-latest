@@ -4,12 +4,15 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: "/", // or "./" if you're seeing 404s with relative paths
+
+  // Keep this only in development (optional)
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:3000", // Use port 3000 for backend
+        target: "http://localhost:3000",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""), // Remove /api from path
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
