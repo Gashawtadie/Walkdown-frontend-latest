@@ -39,7 +39,7 @@ class AuthService {
     // Email validation: must end with @siemens-energy.com
     if (
       !userData.email ||
-      !/^[A-Za-z0-9._%+-]+@siemens-energy.com$/.test(userData.email)
+      !/^[A-Za-z0-9._%+-]+@siemens-energy\.com$/.test(userData.email)
     ) {
       throw new Error('Please enter a valid Siemens Energy email (e.g., user@siemens-energy.com)');
     }
@@ -71,8 +71,13 @@ class AuthService {
   }
 
   getCurrentUser() {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    const userStr = localStorage.getItem('user');
+    if (!userStr || userStr === 'undefined') return null;
+    try {
+      return JSON.parse(userStr);
+    } catch (e) {
+      return null;
+    }
   }
 
   getToken() {
